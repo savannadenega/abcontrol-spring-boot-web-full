@@ -1,9 +1,11 @@
+sudo: required
+addons:
+  chrome: stable
+
 language: node_js
 node_js:
-  - "9"
-dist: trusty
-sudo: false
-
+  - "8"
+  
 branches:
   only:
   - master
