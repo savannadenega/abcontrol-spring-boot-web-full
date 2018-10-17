@@ -1,0 +1,28 @@
+language: node_js
+node_js:
+  - "9"
+dist: trusty
+sudo: false
+
+branches:
+  only:
+  - master
+
+cache:
+  directories:
+    - node_modules
+
+before_script:
+  - npm install -g @angular/cli
+
+script:
+  - ng build --prod --aot
+  - ng test
+  
+deploy:
+  provider: heroku
+  api_key:
+    secure: "CNOlQc1QRdFw3psdEgdiy/+Jg4lxrlLANUxo2QxcWqp2BWjUAB0gB3I9rIRNjQwYOC7SCIfNb4Y241dzW9ULTUVEcZ9yJjLjWaDDhRcGFd0o8AESSqVYIwJIelQ339qehFDLhuXv7LwmCqGSHLnfH5Hnufu3Oj2CLi9YojiNO27Cr+5HoJkiZg2C/KLfhkAm7GDc9Nk/uA5C1/NrnT11T/IfndsbdN2y9SzA8JUh+SzyF6TkhXbgX7yq4bH8FG39ZWiRYQ6o8V139aUieAOWOtPMNXJz+6wgKRz7Id0ToWoPMdziLk3x6yLi7B0WTbIkbwrsR80CUr1hv4XppRLDPSC3qpafclAZfnwdCXkWz4NEZBd8se0WAkW7lsZvu6c5f6DrLYJPUrmEO10Lcn7/ub8ghJZZEpBCKY4DTvWYJOzTiezhQBU5XITAR1y9/PhLMslvEkCUFVsFOl11qu9nFs+XbgrecZXP4hX0TNpZrcmOngbubM3o/1d/apRsAiRN5WwJjmDGrlROxRxTjzXtb4siqHR9lgyQaY95BC6Hx9N5kX45mUoFda6rB70OCJXbJ005P6Uw4C6Uu6BT28yL/E4FSlJ3njz1QojG40c6Rhpk4Emj2nvgWJgZn1aMemffjHnI1SA7R86zhPgsALdFBQKFqbRd8g9lF5pfZUVyZXM="
+  app: abcontrol-spring-boot-web-full
+  on:
+    repo: savannadenega/abcontrol-spring-boot-web-full
