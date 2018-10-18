@@ -6,6 +6,8 @@ before_install:
 - npm install -g @angular/cli
 install: npm install
 
+script:
+    - "webpack"
 branches:
   only:
   - master
