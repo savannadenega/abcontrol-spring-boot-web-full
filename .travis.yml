@@ -2,17 +2,14 @@ language: node_js
 node_js:
   - "8"
   
+before_install:
+- npm install -g @angular/cli
+install: npm install
+
 branches:
   only:
   - master
 
-before_script:
-  - npm install -g @angular/cli
-
-script:
-  - ng build --prod
-  - node server.js
-  
 deploy:
   provider: heroku
   api_key:
