@@ -8,6 +8,10 @@ const routes : Routes = [
   { path: '', redirectTo: '/materials', pathMatch: 'full' }
 ];
 
+export const links = [
+  { 'link': '/materials', 'label' : 'Materiais e Ferramentas'}
+];
+
 @NgModule({
   imports: [
     RouterModule.forRoot(routes)

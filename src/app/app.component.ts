@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-
+import { links } from './app-routing.module';
 
 @Component({
   selector: 'app-root',
@@ -8,4 +8,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'ABControl';
+  links = [];
+  
+  constructor () {
+    this.links = links;
+  }
 }
