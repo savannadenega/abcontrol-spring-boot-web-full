@@ -13,7 +13,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         // array in local storage for registered materials
         let materials: Material[] = JSON.parse(localStorage.getItem('materials'));
-        if (materials.length == 0) materials = TEST_MATERIALS;
+        if (materials == undefined) materials = TEST_MATERIALS;
  
         // wrap in delayed observable to simulate server api call
         return of(null).pipe(mergeMap(() => {
