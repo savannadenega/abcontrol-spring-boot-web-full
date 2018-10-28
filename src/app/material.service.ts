@@ -5,6 +5,7 @@ import { Observable, of } from 'rxjs';
 import { Material } from './material';
 
 import { MessageService } from './message.service';
+import { error } from 'protractor';
 
 @Injectable({
   providedIn: 'root'
@@ -22,11 +23,78 @@ export class MaterialService {
               
     return this.http.get<Material[]>(this.base_url, {params: params})
       .pipe(
-        tap(categories => {
+        tap(materials => {
           console.log('Fetched materials');
-          this.messageService.add("test","fetched materials")
+          console.log(materials);
+          this.messageService.add("Success","Fetched materials");
+        }, err => {
+          if (err.error instanceof Error) {
+            this.messageService.add('An error occurred', err.error.message);
+          } else {
+            this.messageService.add(`List Materials: ${err.status} error`,
+                                  `The server returned a ${err.status} error while listing materials.`);
+          }
+          console.log(err);
         } ),
-        catchError(this.handleError('getMaterials', []))
+   //     catchError(this.handleError('getMaterials', []))
+      );
+  }
+
+  updateMaterial(material : Material) {
+    return this.http.put<any>(this.base_url, material)
+      .pipe(
+        tap(categories => {
+          this.messageService.add("Success!", "Updated Material " + material.id);
+        }, err => {
+          if (err.error instanceof Error) {
+            this.messageService.add('An error occurred', err.error.message);
+          } else {
+            this.messageService.add(`Update material: ${err.status} error`,
+                                  `The server returned a ${err.status} error while updating material.`);
+          }
+          console.log(err);
+        } ),
+      //  catchError(this.handleError('updateMaterial', []))
+      )
+      ;
+  }
+
+  saveMaterial (material : Material) {
+    return this.http.post<Material>(this.base_url, material)
+      .pipe(
+        tap(material => {
+          this.messageService.add("Success!", "Created Material " + material.id);
+        }, err => {
+          if (err.error instanceof Error) {
+            this.messageService.add('An error occurred', err.error.message);
+          } else {
+            this.messageService.add(`Create material: ${err.status} error`,
+                                  `The server returned a ${err.status} error while creating the material.`);
+          }
+          console.log(err);
+        } ),
+        catchError(this.handleError('saveMaterial', []))
+      );
+  }
+
+  deleteMaterial(material : Material) {
+    let params = new HttpParams()
+                  .set("id", material.id);
+
+    return this.http.delete<any>(this.base_url, {params : params})
+      .pipe(
+        tap( status => {
+          this.messageService.add("Success!", "Deleted Material " + material.id);
+        }, err => {
+          if (err.error instanceof Error) {
+            this.messageService.add('An error occurred', err.error.message);
+          } else {
+            this.messageService.add(`Delete Material: ${err.status} error`,
+                                  `The server returned a ${err.status} error while deleting the material.`);
+          }
+          console.log(err);
+        }),
+        catchError(this.handleError('deleteMaterial', []))
       );
   }
 

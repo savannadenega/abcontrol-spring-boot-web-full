@@ -19,7 +19,7 @@ export class MessagesComponent implements OnInit {
 
   showMessage(message : Message) {
     this.snackBar.openFromComponent(MessageToast, {
-      duration: 1000,
+      duration: 5000,
       data: {
         message : message
       }
