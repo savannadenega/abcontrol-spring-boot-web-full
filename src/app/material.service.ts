@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { Material } from './material';
+import { HOST } from './app.component';
 
 import { MessageService } from './message.service';
 import { error } from 'protractor';
@@ -12,7 +13,7 @@ import { error } from 'protractor';
 })
 export class MaterialService {
 
-  base_url = '/materials';
+  base_url = HOST + '/material';
   constructor(private http: HttpClient, private messageService: MessageService) { }
 
   getMaterials(itemsPerPage: number, page: number) : Observable<Material[]> {
@@ -73,13 +74,13 @@ export class MaterialService {
           }
           console.log(err);
         } ),
-        catchError(this.handleError('saveMaterial', []))
+       // catchError(this.handleError('saveMaterial', []))
       );
   }
 
   deleteMaterial(material : Material) {
     let params = new HttpParams()
-                  .set("id", material.id);
+                  .set("id", material.id.toString());
 
     return this.http.delete<any>(this.base_url, {params : params})
       .pipe(
@@ -94,7 +95,7 @@ export class MaterialService {
           }
           console.log(err);
         }),
-        catchError(this.handleError('deleteMaterial', []))
+       // catchError(this.handleError('deleteMaterial', []))
       );
   }
 

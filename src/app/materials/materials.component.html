@@ -13,8 +13,8 @@
             <tr>
               <th scope="col">ID</th>
               <th scope="col">Tipo</th>
+              <th scope="col">Nome</th>
               <th scope="col">Descrição</th>
-              <th scope="col">UN</th>
               <th scope="col">Preço (R$)</th>
               <th scope="col"></th>
             </tr>
@@ -24,22 +24,22 @@
               <tr *ngIf="material.id != editingMaterial.id">
                   <th scope="row">{{material.id}}</th>
                   <td>{{material.tipoMaterial}}</td>
-                  <td>{{material.descricao}}</td>
-                  <td>{{material.tipoUnidade}}</td>
+                  <td>{{material.nomeMaterial}}</td>
+                  <td>{{material.descricaoMaterial}}</td>
                   <td>{{material.valorUnidade}}</td> 
                   <td><div class="btn-group" role="group" style="width: 100%;">
-                    <button type="button" class="btn btn-primary" (click)="startUpdate(i)" [disabled]="adding || editing"><fa-icon [icon]="faEdit"></fa-icon></button>
+                    <button type="button" class="btn btn-warning" (click)="startUpdate(i)" [disabled]="adding || editing"><fa-icon [icon]="faEdit" [inverse]="true"></fa-icon></button>
                     <button type="button" class="btn btn-secondary" (click)="deleteMaterial(i)" [disabled]="adding || editing"><fa-icon [icon]="faTrash"></fa-icon></button>
                   </div></td> 
                 </tr>
               <tr *ngIf="material.id == editingMaterial.id">
                 <th scope="row">{{editingMaterial.id}}</th>
                 <td><input [(ngModel)]="editingMaterial.tipoMaterial" /></td>
-                <td><input [(ngModel)]="editingMaterial.descricao" /></td>
-                <td><input [(ngModel)]="editingMaterial.tipoUnidade" /></td>
+                <td><input [(ngModel)]="editingMaterial.nomeMaterial" /></td>
+                <td><input [(ngModel)]="editingMaterial.descricaoMaterial" /></td>
                 <td><input [(ngModel)]="editingMaterial.valorUnidade" /></td>
                 <td><div class="btn-group" role="group" style="width: 100%;">
-                    <button type="button" class="btn btn-primary" (click)="updateMaterial()"><fa-icon [icon]="faSave"></fa-icon></button>
+                    <button type="button" class="btn btn-warning" (click)="updateMaterial()"><fa-icon [icon]="faSave" [inverse]="true"></fa-icon></button>
                     <button type="button" class="btn btn-secondary" (click)="resetUpdate()"><fa-icon [icon]="faTimesCircle"></fa-icon></button>
                   </div></td>
                 </tr>
@@ -47,11 +47,11 @@
             <tr *ngIf="adding">
                 <th scope="row">{{editingMaterial.id}}</th>
                 <td><input [(ngModel)]="editingMaterial.tipoMaterial" /></td>
-                <td><input [(ngModel)]="editingMaterial.descricao" /></td>
-                <td><input [(ngModel)]="editingMaterial.tipoUnidade" /></td>
+                <td><input [(ngModel)]="editingMaterial.nomeMaterial" /></td>
+                <td><input [(ngModel)]="editingMaterial.descricaoMaterial" /></td>
                 <td><input [(ngModel)]="editingMaterial.valorUnidade" /></td>
                 <td><div class="btn-group" role="group" style="width: 100%;">
-                    <button type="button" class="btn btn-primary" (click)="saveMaterial()"><fa-icon [icon]="faSave"></fa-icon></button>
+                    <button type="button" class="btn btn-warning" (click)="saveMaterial()"><fa-icon [icon]="faSave" [inverse]="true"></fa-icon></button>
                     <button type="button" class="btn btn-secondary" (click)="resetAdd()"><fa-icon [icon]="faTimesCircle"></fa-icon></button>
                   </div></td>
             </tr>

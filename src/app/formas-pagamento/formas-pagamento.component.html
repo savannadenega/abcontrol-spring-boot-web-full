@@ -1,0 +1,58 @@
+<div>
+  <div>
+      <div class="float-left">
+        <h3>Formas de Pagamento</h3>
+      </div>
+      <div class="float-right">
+        <button type="button" class="btn btn-default" (click)="initAddFormaPagamento()" [disabled]="adding || editing"><fa-icon [icon]="faPlus"></fa-icon></button>
+      </div>
+    </div>
+  <div>
+      <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Forma de Pagamento</th>
+              <th scope="col">Descrição</th>
+              <th scope="col">Valor (R$)</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let forma of formas; let i = index;" [attr.data-index]="i">
+              <tr *ngIf="forma.id != editingForma.id">
+                  <th scope="row">{{forma.id}}</th>
+                  <td>{{forma.formaPagamento}}</td>
+                  <td>{{forma.descricaoPagamento}}</td>
+                  <td>{{forma.valorPagamento}}</td>
+                  <td><div class="btn-group" role="group" style="width: 100%;">
+                    <button type="button" class="btn btn-warning" (click)="startUpdate(i)" [disabled]="adding || editing"><fa-icon [icon]="faEdit" [inverse]="true"></fa-icon></button>
+                    <button type="button" class="btn btn-secondary" (click)="deleteFormaPagamento(i)" [disabled]="adding || editing"><fa-icon [icon]="faTrash"></fa-icon></button>
+                  </div></td> 
+                </tr>
+              <tr *ngIf="forma.id == editingForma.id">
+                <th scope="row">{{editingForma.id}}</th>
+                <td><input [(ngModel)]="editingForma.formaPagamento" /></td>
+                <td><input [(ngModel)]="editingForma.descricaoPagamento" /></td>
+                <td><input [(ngModel)]="editingForma.valorPagamento" /></td>
+                <td><div class="btn-group" role="group" style="width: 100%;">
+                    <button type="button" class="btn btn-warning" (click)="updateFormaPagamento()"><fa-icon [icon]="faSave" [inverse]="true"></fa-icon></button>
+                    <button type="button" class="btn btn-secondary" (click)="resetUpdate()"><fa-icon [icon]="faTimesCircle"></fa-icon></button>
+                  </div></td>
+                </tr>
+            </ng-container>
+            <tr *ngIf="adding">
+                <th scope="row">{{editingForma.id}}</th>
+                <td><input [(ngModel)]="editingForma.formaPagamento" /></td>
+                <td><input [(ngModel)]="editingForma.descricaoPagamento" /></td>
+                <td><input [(ngModel)]="editingForma.valorPagamento" /></td>
+                <td><div class="btn-group" role="group" style="width: 100%;">
+                    <button type="button" class="btn btn-warning" (click)="saveFormaPagamento()"><fa-icon [icon]="faSave" [inverse]="true"></fa-icon></button>
+                    <button type="button" class="btn btn-secondary" (click)="resetUpdate()"><fa-icon [icon]="faTimesCircle"></fa-icon></button>
+                  </div></td>
+            </tr>
+           </tbody>
+        </table>
+  </div>
+
+</div>

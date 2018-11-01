@@ -14,13 +14,15 @@ import { MaterialsComponent } from './materials/materials.component';
 import { AppRoutingModule } from './/app-routing.module';
 import { MessagesComponent, MessageToast } from './messages/messages.component';
 import { MaterialRowComponent } from './materials/material-row/material-row.component';
+import { FormasPagamentoComponent } from './formas-pagamento/formas-pagamento.component';
 @NgModule({
   declarations: [
     AppComponent,
     MaterialsComponent,
     MessagesComponent,
     MessageToast,
-    MaterialRowComponent
+    MaterialRowComponent,
+    FormasPagamentoComponent
   ],
   imports: [
     BrowserModule,

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MaterialService } from '../material.service';
 import {Material} from '../material';
 import { faPlus, faEdit, faTrash, faSave, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { UtilsService } from '../utils.service';
 
 @Component({
   selector: 'app-materials',
@@ -17,7 +18,8 @@ export class MaterialsComponent implements OnInit {
   editing : boolean = false;
   adding: boolean = false;
   materials : Material[];
-  constructor(private materialService : MaterialService) { }
+  constructor(private materialService : MaterialService,
+              private utils : UtilsService) { }
 
   ngOnInit() {
     this.getMaterials();
@@ -25,7 +27,7 @@ export class MaterialsComponent implements OnInit {
   }
 
   resetUpdate() {
-    this.editingMaterial = { id: '-', tipoMaterial : '', descricao : '', tipoUnidade : '', valorUnidade : 0};
+    this.editingMaterial = { id: 0, tipoMaterial : '', descricaoMaterial : '', nomeMaterial : '', valorUnidade : 0};
     this.editing = false;
     this.editingIndex = -1;
   }
@@ -41,7 +43,7 @@ export class MaterialsComponent implements OnInit {
 
   startUpdate(i : number) {
   //  this.editingMaterial = Object.create(this.materials[i]);
-    this.editingMaterial = this.deepCopy(this.materials[i]); 
+    this.editingMaterial = this.utils.deepCopy(this.materials[i]); 
     console.log(this.editingMaterial);
     this.editingIndex = i;
     this.editing = true;
@@ -85,37 +87,4 @@ export class MaterialsComponent implements OnInit {
     );
   }
 
-  deepCopy(obj) {
-      var copy;
-
-      // Handle the 3 simple types, and null or undefined
-      if (null == obj || "object" != typeof obj) return obj;
-
-      // Handle Date
-      if (obj instanceof Date) {
-          copy = new Date();
-          copy.setTime(obj.getTime());
-          return copy;
-      }
-
-      // Handle Array
-      if (obj instanceof Array) {
-          copy = [];
-          for (var i = 0, len = obj.length; i < len; i++) {
-              copy[i] = this.deepCopy(obj[i]);
-          }
-          return copy;
-      }
-
-      // Handle Object
-      if (obj instanceof Object) {
-          copy = {};
-          for (var attr in obj) {
-              if (obj.hasOwnProperty(attr)) copy[attr] = this.deepCopy(obj[attr]);
-          }
-          return copy;
-      }
-
-      throw new Error("Unable to copy obj! Its type isn't supported.");
-  }
 }
