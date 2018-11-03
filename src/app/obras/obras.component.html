@@ -1,0 +1,106 @@
+<div>
+  <div>
+      <div class="float-left">
+        <h3>Obras</h3>
+      </div>
+      <div class="float-right">
+        <button type="button" class="btn btn-default" (click)="initAdd()" [disabled]="adding || editing"><fa-icon [icon]="faPlus"></fa-icon></button>
+      </div>
+    </div>
+  <div>
+      <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Nome</th>
+              <th scope="col">Tipo</th>
+              <th scope="col">Status</th>
+              <th scope="col">Data Inicial</th>
+              <th scope="col">Previsão de Término</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let obra of obras; let i = index;" [attr.data-index]="i">
+              <tr *ngIf="obra.idObra != editingObra.idObra">
+                  <th scope="row">{{obra.idObra}}</th>
+                  <td>{{obra.nome}}</td>
+                  <td>{{obra.tipoObra}}</td>
+                  <td>{{obra.statusObra}}</td>
+                  <td>{{obra.dataInicial | date : "dd MMM, yyyy"}}</td>
+                  <td>{{obra.previsaoTermino | date : "dd MMM, yyyy"}}</td>
+                  <td><div class="btn-group" role="group" style="width: 100%;">
+                    <button type="button" class="btn btn-warning" (click)="startUpdate(i)" [disabled]="adding || editing"><fa-icon [icon]="faEdit" [inverse]="true"></fa-icon></button>
+                    <button type="button" class="btn btn-secondary" (click)="delete(i)" [disabled]="adding || editing"><fa-icon [icon]="faTrash"></fa-icon></button>
+                  </div></td> 
+                </tr>
+              <tr *ngIf="obra.idObra == editingObra.idObra">
+                <th scope="row">{{editingObra.idObra}}</th>
+                <td><input [(ngModel)]="editingObra.nome" /></td>
+                <td>
+                  <mat-form-field>
+                    <mat-select [(value)]="editingObra.tipoObra">
+                      <mat-option> - </mat-option>
+                      <mat-option *ngFor="let tipo of tipoObras" value="{{tipo}}">{{tipo}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                <td>
+                  <mat-form-field>
+                    <mat-select [(value)]="editingObra.statusObra">
+                      <mat-option> - </mat-option>
+                      <mat-option *ngFor="let status of statusObras" value="{{status}}">{{status}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                <td>
+                  <mat-form-field>
+                    <input matInput [(ngModel)]="editingObra.dataInicial" [matDatepicker]="dataInicialPicker" placeholder="Data Inicial">
+                    <mat-datepicker-toggle matSuffix [for]="dataInicialPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #dataInicialPicker [startAt]="editingObra.dataInicial"></mat-datepicker>
+                  </mat-form-field>
+                <td>
+                  <input matInput [(ngModel)]="editingObra.previsaoTermino" [matDatepicker]="previsaoTerminoPicker" placeholder="Previsão Término">
+                  <mat-datepicker-toggle matSuffix [for]="previsaoTerminoPicker"></mat-datepicker-toggle>
+                  <mat-datepicker #previsaoTerminoPicker [startAt]="editingObra.previsaoTermino"></mat-datepicker>
+                <td><div class="btn-group" role="group" style="width: 100%;">
+                    <button type="button" class="btn btn-warning" (click)="update()"><fa-icon [icon]="faSave" [inverse]="true"></fa-icon></button>
+                    <button type="button" class="btn btn-secondary" (click)="resetUpdate()"><fa-icon [icon]="faTimesCircle"></fa-icon></button>
+                  </div></td>
+                </tr>
+            </ng-container>
+            <tr *ngIf="adding">
+                <th scope="row">{{editingObra.idObra}}</th>
+                <td><input [(ngModel)]="editingObra.nome" /></td>
+                <td>
+                  <mat-form-field>
+                    <mat-select [(value)]="editingObra.tipoObra">
+                      <mat-option> - </mat-option>
+                      <mat-option *ngFor="let tipo of tipoObras" value="{{tipo}}">{{tipo}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                <td>
+                  <mat-form-field>
+                    <mat-select [(value)]="editingObra.statusObra">
+                      <mat-option> - </mat-option>
+                      <mat-option *ngFor="let status of statusObras" value="{{status}}">{{status}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                <td>
+                  <mat-form-field>
+                    <input matInput [(ngModel)]="editingObra.dataInicial" [matDatepicker]="dataInicialPicker" placeholder="Data Inicial">
+                    <mat-datepicker-toggle matSuffix [for]="dataInicialPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #dataInicialPicker [startAt]="today"></mat-datepicker>
+                  </mat-form-field>
+                <td>
+                  <input matInput [(ngModel)]="editingObra.previsaoTermino" [matDatepicker]="previsaoTerminoPicker" placeholder="Previsão Término">
+                  <mat-datepicker-toggle matSuffix [for]="previsaoTerminoPicker"></mat-datepicker-toggle>
+                  <mat-datepicker #previsaoTerminoPicker [startAt]="editingObra.dataInicial"></mat-datepicker>
+                <td><div class="btn-group" role="group" style="width: 100%;">
+                    <button type="button" class="btn btn-warning" (click)="save()"><fa-icon [icon]="faSave" [inverse]="true"></fa-icon></button>
+                    <button type="button" class="btn btn-secondary" (click)="resetAdd()"><fa-icon [icon]="faTimesCircle"></fa-icon></button>
+                  </div></td>
+            </tr>
+           </tbody>
+        </table>
+  </div>
+
+</div>
