@@ -41,7 +41,7 @@ export class ObrasService {
     return this.http.put<any>(this.base_url, obra)
       .pipe(
         tap(categories => {
-          this.messageService.add("Successo!", `Atualizou obra ${obra.idObra}`);
+          this.messageService.add("Successo!", `Atualizou obra ${obra.id}`);
         }, err => {
           if (err.error instanceof Error) {
             this.messageService.add('Ocorreu um erro', err.error.message);
@@ -58,7 +58,7 @@ export class ObrasService {
     return this.http.post<Obra>(this.base_url, obra)
       .pipe(
         tap(forma_pg => {
-          this.messageService.add("Successo!", `Criou obra ${obra.idObra}`);
+          this.messageService.add("Successo!", `Criou obra ${obra.id}`);
         }, err => {
           if (err.error instanceof Error) {
             this.messageService.add('Ocorreu um erro', err.error.message);
@@ -73,12 +73,12 @@ export class ObrasService {
 
   delete(obra : Obra) {
     let params = new HttpParams()
-                  .set("id", obra.idObra.toString());
+                  .set("id", obra.id.toString());
 
     return this.http.delete<any>(this.base_url, {params : params})
       .pipe(
         tap( status => {
-          this.messageService.add("Successo!", `Deletou obra ${obra.idObra}`);
+          this.messageService.add("Successo!", `Deletou obra ${obra.id}`);
         }, err => {
           if (err.error instanceof Error) {
             this.messageService.add('Ocorreu um erro', err.error.message);

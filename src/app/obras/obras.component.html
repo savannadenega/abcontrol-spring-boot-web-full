@@ -22,8 +22,8 @@
           </thead>
           <tbody>
             <ng-container *ngFor="let obra of obras; let i = index;" [attr.data-index]="i">
-              <tr *ngIf="obra.idObra != editingObra.idObra">
-                  <th scope="row">{{obra.idObra}}</th>
+              <tr *ngIf="obra.id != editingObra.id">
+                  <th scope="row">{{obra.id}}</th>
                   <td>{{obra.nome}}</td>
                   <td>{{obra.tipoObra}}</td>
                   <td>{{obra.statusObra}}</td>
@@ -34,8 +34,8 @@
                     <button type="button" class="btn btn-secondary" (click)="delete(i)" [disabled]="adding || editing"><fa-icon [icon]="faTrash"></fa-icon></button>
                   </div></td> 
                 </tr>
-              <tr *ngIf="obra.idObra == editingObra.idObra">
-                <th scope="row">{{editingObra.idObra}}</th>
+              <tr *ngIf="obra.id == editingObra.id">
+                <th scope="row">{{editingObra.id}}</th>
                 <td><input [(ngModel)]="editingObra.nome" /></td>
                 <td>
                   <mat-form-field>
@@ -68,7 +68,7 @@
                 </tr>
             </ng-container>
             <tr *ngIf="adding">
-                <th scope="row">{{editingObra.idObra}}</th>
+                <th scope="row">{{editingObra.id}}</th>
                 <td><input [(ngModel)]="editingObra.nome" /></td>
                 <td>
                   <mat-form-field>

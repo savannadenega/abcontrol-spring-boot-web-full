@@ -12,8 +12,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
     constructor() { }
  
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        // array in local storage for registered materials
         
+        /*
         let st_materialId : string = JSON.parse(localStorage.getItem('materialId'));
         let st_formasId: string = JSON.parse(localStorage.getItem('formaId'));
         let st_obraId : string = JSON.parse(localStorage.getItem('obraId'));
@@ -45,120 +45,19 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
         let obras: Obra[] = JSON.parse(localStorage.getItem('obras'));
         if (obras == undefined) obras = TEST_OBRAS;
-
+        */
 
         // wrap in delayed observable to simulate server api call
         return of(null).pipe(mergeMap(() => {
             
-            if (request.url.endsWith('/material')) {
-                if (request.method == 'GET') {
-                    return of(new HttpResponse({status: 200, body: materials}));
-                } else if (request.method == 'POST') {
-                    let m = <Material> request.body;
-                    materialId++;
-                    m.id = materialId;
-                    materials.push(m);
-                    localStorage.setItem('materials', JSON.stringify(materials));
-                    localStorage.setItem('materialId', materialId.toString());
-                    return of(new HttpResponse({status: 201, body: m}));
-                } else if (request.method == 'PUT') {
-                    let m = <Material> request.body;
-                    for (let i = 0; i < materials.length; i++) {
-                        if (materials[i].id == m.id) {
-                            materials[i] = m;
-                        }
-                    }
-                    localStorage.setItem('materials', JSON.stringify(materials));
-                    return of(new HttpResponse({status: 204}));
-                } else if (request.method == 'DELETE') {
-                    let id = parseInt(request.params.get("id"));
-                    let found = false;
-                    for (let i = 0; i < materials.length; i++) {
-                        if (materials[i].id == id) {
-                            materials.splice(i, 1);
-                            found = true;
-                        }
-                    }
-                    localStorage.setItem('materials', JSON.stringify(materials));
-                    if (found)
-                        return of(new HttpResponse({status: 200}));
-                    else 
-                        return of(new HttpResponse({status: 404}));
-                } 
-            } 
-            if (request.url.endsWith('/formapagamento')) {
-                if (request.method == 'GET') {
-                    return of(new HttpResponse({status: 200, body: formas_pg}));
-                } else if (request.method == 'POST') {
-                    let f = <FormaPagamento> request.body;
-                    formasId++;
-                    f.id = formasId;
-                    formas_pg.push(f);
-                    localStorage.setItem('formas_pg', JSON.stringify(formas_pg));
-                    localStorage.setItem('formaId', formasId.toString());
-                    return of(new HttpResponse({status: 201, body: f}));
-                } else if (request.method == 'PUT') {
-                    let f = <FormaPagamento> request.body;
-                    for (let i = 0; i < formas_pg.length; i++) {
-                        if (formas_pg[i].id == f.id) {
-                            formas_pg[i] = f;
-                        }
-                    }
-                    localStorage.setItem('formas_pg', JSON.stringify(formas_pg));
-                    return of(new HttpResponse({status: 204}));
-                } else if (request.method == 'DELETE') {
-                    let id = parseInt(request.params.get("id"));
-                    let found = false;
-                    for (let i = 0; i < formas_pg.length; i++) {
-                        if (formas_pg[i].id == id) {
-                            formas_pg.splice(i, 1);
-                            found = true;
-                        }
-                    }
-                    localStorage.setItem('formas_pg', JSON.stringify(formas_pg));
-                    if (found)
-                        return of(new HttpResponse({status: 200}));
-                    else 
-                        return of(new HttpResponse({status: 404}));
-                } 
-            }
+            let returnValue : Observable<HttpEvent<any>>;
+            returnValue = handleCrudRequest<Material>(request, "/material", "material", TEST_MATERIALS);
+            if (returnValue != null) return returnValue;
+            returnValue = handleCrudRequest<FormaPagamento>(request, "/formapagamento", "forma_pg", TEST_FORMAS_PG);
+            if (returnValue != null) return returnValue;
+            returnValue = handleCrudRequest<Obra>(request, "/obra", "obra", TEST_OBRAS);
+            if (returnValue != null) return returnValue;
 
-            if (request.url.endsWith('/obra')) {
-                if (request.method == 'GET') {
-                    return of(new HttpResponse({status: 200, body: obras}));
-                } else if (request.method == 'POST') {
-                    let o = <Obra> request.body;
-                    obraId++;
-                    o.idObra = obraId;
-                    obras.push(o);
-                    localStorage.setItem('obras', JSON.stringify(obras));
-                    localStorage.setItem('obraId', obraId.toString());
-                    return of(new HttpResponse({status: 201, body: o}));
-                } else if (request.method == 'PUT') {
-                    let o = <Obra> request.body;
-                    for (let i = 0; i < obras.length; i++) {
-                        if (obras[i].idObra == o.idObra) {
-                            obras[i] = o;
-                        }
-                    }
-                    localStorage.setItem('obras', JSON.stringify(obras));
-                    return of(new HttpResponse({status: 204}));
-                } else if (request.method == 'DELETE') {
-                    let id = parseInt(request.params.get("id"));
-                    let found = false;
-                    for (let i = 0; i < obras.length; i++) {
-                        if (obras[i].idObra == id) {
-                            obras.splice(i, 1);
-                            found = true;
-                        }
-                    }
-                    localStorage.setItem('obras', JSON.stringify(obras));
-                    if (found)
-                        return of(new HttpResponse({status: 200}));
-                    else 
-                        return of(new HttpResponse({status: 404}));
-                }
-            } 
 
             // pass through any requests not handled above
             return next.handle(request);
@@ -170,6 +69,58 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         .pipe(delay(500))
         .pipe(dematerialize());
     }
+}
+
+function handleCrudRequest<T>(request: HttpRequest<any>, endpoint : string, objName : string, TEST_OBJS : T[]) : Observable<HttpEvent<any>> {
+    let idStorageName = objName + "id", objsStorageName = objName + "s";
+    let st_id : string = JSON.parse(localStorage.getItem(idStorageName));
+    let idRef;
+    if (st_id == undefined) {
+        idRef = 110;
+    } else {
+        idRef = parseInt(st_id);
+    } 
+
+    let objs : T[] = JSON.parse(localStorage.getItem(objsStorageName));
+    if (objs == undefined) objs = TEST_OBJS;
+
+    if (request.url.endsWith(endpoint)) {
+        if (request.method == 'GET') {
+            return of(new HttpResponse({status: 200, body: objs}));
+        } else if (request.method == 'POST') {
+            let o = <T> request.body;
+            idRef++;
+            o['id'] = idRef;
+            objs.push(o);
+            localStorage.setItem(objsStorageName, JSON.stringify(objs));
+            localStorage.setItem(idStorageName, idRef.toString());
+            return of(new HttpResponse({status: 201, body: o}));
+        } else if (request.method == 'PUT') {
+            let o = <T> request.body;
+            for (let i = 0; i < objs.length; i++) {
+                if (objs[i]['id'] == o['id']) {
+                    objs[i] = o;
+                }
+            }
+            localStorage.setItem(objsStorageName, JSON.stringify(objs));
+            return of(new HttpResponse({status: 204}));
+        } else if (request.method == 'DELETE') {
+            let id = parseInt(request.params.get("id"));
+            let found = false;
+            for (let i = 0; i < objs.length; i++) {
+                if (objs[i]['id'] == id) {
+                    objs.splice(i, 1);
+                    found = true;
+                }
+            }
+            localStorage.setItem(objsStorageName, JSON.stringify(objs));
+            if (found)
+                return of(new HttpResponse({status: 200}));
+            else 
+                return of(new HttpResponse({status: 404}));
+        }
+    }
+    return null;
 }
  
 export let fakeBackendProvider = {

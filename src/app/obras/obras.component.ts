@@ -36,7 +36,7 @@ export class ObrasComponent implements OnInit {
   }
 
   resetUpdate() {
-    this.editingObra = { idObra: 0, nome: '', tipoObra: '', statusObra: '', dataInicial: undefined, previsaoTermino: undefined };
+    this.editingObra = { id: 0, nome: '', tipoObra: '', statusObra: '', dataInicial: undefined, previsaoTermino: undefined };
     this.editing = false;
     this.editingIndex = -1;
   }
