@@ -27,7 +27,7 @@ export class MaterialsComponent implements OnInit {
   }
 
   resetUpdate() {
-    this.editingMaterial = { id: 0, tipoMaterial : '', descricaoMaterial : '', nomeMaterial : '', valorUnidade : 0};
+    this.editingMaterial = { id: 0, tipoMaterial : '', descricaoMaterial : '', tipoUnidade : '', valorUnidade : 0};
     this.editing = false;
     this.editingIndex = -1;
   }
