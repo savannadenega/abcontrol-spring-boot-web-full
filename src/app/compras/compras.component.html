@@ -1,0 +1,36 @@
+<div>
+  <div>
+      <div class="float-left">
+        <h3>Compras</h3>
+      </div>
+      <div class="float-right">
+        <button type="button" class="btn btn-default" (click)="initAdd()" [disabled]="adding || editing"><fa-icon [icon]="faPlus"></fa-icon></button>
+      </div>
+    </div>
+  <div>
+      <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Nome</th>
+              <th scope="col">Data</th>
+              <th scope="col">Fornecedor</th>
+              <th scope="col">E-mail Fornecedor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let compra of compras; let i = index;" [attr.data-index]="i">
+              
+              <tr (click)="openDetails(i)">
+                  <th scope="row">{{compra.id}}</th>
+                  <td><a routerLink="/compras/{{compra.id}}">{{compra.nome}}</a></td>
+                  <td>{{compra.dataCompra | date : "dd MMM, yyyy"}}</td>
+                  <td>{{compra.nomeFornecedor}}</td>
+                  <td>{{compra.emailFornecedor}}</td>
+                </tr>
+            </ng-container>
+           </tbody>
+        </table>
+  </div>
+
+</div>

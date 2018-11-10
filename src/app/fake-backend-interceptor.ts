@@ -5,6 +5,7 @@ import { delay, mergeMap, materialize, dematerialize } from 'rxjs/operators';
 import { TEST_MATERIALS, Material } from './material';
 import { FormaPagamento, TEST_FORMAS_PG } from './forma-pagamento';
 import { Obra, TEST_OBRAS } from './obra';
+import { Compra, TEST_COMPRAS } from './compra';
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
@@ -50,15 +51,22 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         // wrap in delayed observable to simulate server api call
         return of(null).pipe(mergeMap(() => {
             
+            console.log("Trying to find fake backend endpoint for " + request.url);
             let returnValue : Observable<HttpEvent<any>>;
+            
             returnValue = handleCrudRequest<Material>(request, "/material", "material", TEST_MATERIALS);
             if (returnValue != null) return returnValue;
+            
             returnValue = handleCrudRequest<FormaPagamento>(request, "/formapagamento", "forma_pg", TEST_FORMAS_PG);
             if (returnValue != null) return returnValue;
+            
             returnValue = handleCrudRequest<Obra>(request, "/obra", "obra", TEST_OBRAS);
             if (returnValue != null) return returnValue;
-
-
+            
+            returnValue = handleCrudRequest<Compra>(request, "/compra", "compra", TEST_COMPRAS);
+            if (returnValue != null) return returnValue;
+            
+            console.log("Not able to find endpoint");
             // pass through any requests not handled above
             return next.handle(request);
              
@@ -84,9 +92,21 @@ function handleCrudRequest<T>(request: HttpRequest<any>, endpoint : string, objN
     let objs : T[] = JSON.parse(localStorage.getItem(objsStorageName));
     if (objs == undefined) objs = TEST_OBJS;
 
-    if (request.url.endsWith(endpoint)) {
+    if (request.url.startsWith(endpoint)) {
         if (request.method == 'GET') {
-            return of(new HttpResponse({status: 200, body: objs}));
+            let regex = new RegExp(endpoint + "\/[0-9]+");
+            if (request.url.match(regex)){
+                let urlParts = request.url.split('/');
+                let id = parseInt(urlParts[urlParts.length - 1]);
+                console.log('GET by id' + request.url);
+                for (let i = 0; i < objs.length; i++) {
+                    if (objs[i]['id'] == id) {
+                        return of(new HttpResponse({status: 200, body: objs[i]}));
+                    }
+                }
+            } else {
+                return of(new HttpResponse({status: 200, body: objs}));
+            }
         } else if (request.method == 'POST') {
             let o = <T> request.body;
             idRef++;

@@ -1,0 +1,100 @@
+<div class="d-block">
+    <div style="width: 100%">
+      <div class="float-left">
+        <h3><span *ngIf="newCompra">Nova </span>Compra <span *ngIf="compra && !newCompra">{{compra.id}}</span></h3>
+      </div>
+      <div class="float-right">
+        <button type="button" class="btn btn-default" (click)="back()"><fa-icon [icon]="faTimesCircle"></fa-icon></button>
+      </div>
+    </div>
+    <br><br><br>
+    <div>
+      <div *ngIf="compra">
+        <div>
+          <div class="row">
+            <mat-form-field class="col-8">
+              <input matInput placeholder="Descrição" [(ngModel)]="compra.nome">
+            </mat-form-field>
+            <mat-form-field class="col-4">
+              <input matInput placeholder="Data" [(ngModel)]="compra.dataCompra" [matDatepicker]="dataCompraPicker" >
+              <mat-datepicker-toggle matSuffix [for]="dataCompraPicker"></mat-datepicker-toggle>
+              <mat-datepicker #dataCompraPicker [startAt]="compra.dataCompra"></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="row">
+            <mat-form-field class="col-6">
+              <input matInput placeholder="Fornecedor" [(ngModel)]="compra.nomeFornecedor">
+            </mat-form-field>
+            <mat-form-field class="col-6">
+              <input matInput placeholder="E-mail Fornecedor" [(ngModel)]="compra.emailFornecedor" [formControl]="emailControl">
+              <mat-error *ngIf="emailControl.invalid">{{getEmailErrorMessage()}}</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div>
+          <div>
+            <div class="float-left">
+              <h4>Items</h4>
+            </div>
+            <div class="float-right">
+              <button type="button" class="btn btn-default" (click)="initAdd()" [disabled]="adding || editing"><fa-icon [icon]="faPlus"></fa-icon></button>
+            </div>
+          </div>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Material</th>
+                <th scope="col">Quantidade</th>
+                <th scope="col">Valor</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let item of compra.itens; let i = index;" [attr.data-index]="i">
+                <tr *ngIf="i != editingIndex">
+                  <td>{{item.material.descricaoMaterial}}</td>
+                  <td>{{item.quantidade | number :'1.0-2'}}</td>
+                  <td>{{item.preco | number :'1.2-2'}}</td>
+                  <td><div class="btn-group" role="group" style="width: 100%;">
+                      <button type="button" class="btn btn-warning" (click)="startUpdate(i)" [disabled]="adding || editing"><fa-icon [icon]="faEdit" [inverse]="true"></fa-icon></button>
+                      <button type="button" class="btn btn-secondary" (click)="delete(i)" [disabled]="adding || editing"><fa-icon [icon]="faTrash"></fa-icon></button>
+                    </div></td> 
+                </tr>
+                <tr *ngIf="i == editingIndex">
+                  <td><mat-form-field>
+                    <input matInput [(ngModel)]="descricaoMaterial" [matAutocomplete]="auto" [formControl]="editingMaterialControl">
+                    <mat-error *ngIf="materialInvalido || editingMaterialControl.invalid">{{getMaterialErrorMessage(editingMaterialControl)}}</mat-error>
+                  </mat-form-field></td>
+                  <td><input [(ngModel)]="editingItem.quantidade" /></td>
+                  <td>{{editingItem.preco | number : '1.2-2'}}</td>
+                  <td><div class="btn-group" role="group" style="width: 100%;">
+                      <button type="button" class="btn btn-warning" (click)="update()"><fa-icon [icon]="faSave" [inverse]="true"></fa-icon></button>
+                      <button type="button" class="btn btn-secondary" (click)="resetUpdate()"><fa-icon [icon]="faTimesCircle"></fa-icon></button>
+                    </div></td>
+                </tr>
+              </ng-container>
+              <tr *ngIf="adding">
+                <td><mat-form-field>
+                  <input type="text" matInput [matAutocomplete]="auto" [(ngModel)]="descricaoMaterial" [formControl]="addingMaterialControl">
+                </mat-form-field></td>
+                <td><input [(ngModel)]="editingItem.quantidade" /></td>
+                <td>{{editingItem.preco | number : '1.2-2'}}</td>
+                <td><div class="btn-group" role="group" style="width: 100%;">
+                    <button type="button" class="btn btn-warning" (click)="add()"><fa-icon [icon]="faSave" [inverse]="true"></fa-icon></button>
+                    <button type="button" class="btn btn-secondary" (click)="resetAdd()"><fa-icon [icon]="faTimesCircle"></fa-icon></button>
+                  </div></td> 
+              </tr>
+            </tbody>
+          </table>
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let materialDesc of filteredMaterials | async" [value]="materialDesc">{{materialDesc}}</mat-option>
+          </mat-autocomplete>
+        </div>
+      </div>
+    
+      <div>
+        <button type="button" class="btn btn-primary" (click)="save()"><fa-icon [icon]="faSave"></fa-icon> Salvar</button>
+      </div>
+    </div>
+  
+  </div>
