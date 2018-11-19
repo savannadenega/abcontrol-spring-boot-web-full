@@ -16,6 +16,7 @@
               <th scope="col">Data</th>
               <th scope="col">Fornecedor</th>
               <th scope="col">E-mail Fornecedor</th>
+              <th scope="col">Status</th>
             </tr>
           </thead>
           <tbody>
@@ -23,10 +24,11 @@
               
               <tr (click)="openDetails(i)">
                   <th scope="row">{{compra.id}}</th>
-                  <td><a routerLink="/compras/{{compra.id}}">{{compra.nome}}</a></td>
+                  <td><a routerLink="/compras/{{compra.id}}">{{compra.nomeCompra}}</a></td>
                   <td>{{compra.dataCompra | date : "dd MMM, yyyy"}}</td>
-                  <td>{{compra.nomeFornecedor}}</td>
+                  <td>{{compra.razaoSocialFornecedor}}</td>
                   <td>{{compra.emailFornecedor}}</td>
+                  <td>{{compra.estadoCompra}}</td>
                 </tr>
             </ng-container>
            </tbody>

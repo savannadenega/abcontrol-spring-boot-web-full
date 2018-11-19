@@ -108,4 +108,24 @@ export class ComprasService {
         })
       );
   }
+
+  sendEmail(compra : Compra) {
+    let params = new HttpParams()
+                  .set("id", compra.id.toString());
+
+    return this.http.post<any>(this.base_url + '/enviarEmailCompra/' + compra.id, undefined)
+      .pipe(
+        tap(result => {
+          this.messageService.add("Successo!", `Enviou email para ${compra.emailFornecedor}`);
+        }, err => {
+          if (err.error instanceof Error) {
+            this.messageService.add('Ocorreu um erro', err.error.message);
+          } else {
+            this.messageService.add(`Enviar e-mail: ${err.status} error`,
+                                  `O servidor retornou status ${err.status} ao enviar e-mail para o fornecedor.`);
+          }
+          console.log(err);
+        } )
+      );
+  }
 }

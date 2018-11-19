@@ -3,8 +3,8 @@ import { FormControl, Validators } from '@angular/forms';
 import { MatInput, MatSelect, MatDatepicker, MatAutocomplete} from '@angular/material';
 import { ComprasService } from '../compras.service';
 import { MaterialService } from '../material.service';
-import { Compra, OrdemCompra } from '../compra';
-import { faPlus, faEdit, faTrash, faSave, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { Compra, OrdemCompra, ESTADOS_COMPRA } from '../compra';
+import { faPlus, faEdit, faTrash, faSave, faTimesCircle, faShareSquare } from '@fortawesome/free-solid-svg-icons';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import { UtilsService } from '../utils.service';
@@ -24,6 +24,7 @@ export class CompraDetailsComponent implements OnInit {
 
   faPlus = faPlus; faEdit = faEdit; faTrash = faTrash;  
   faSave = faSave; faTimesCircle = faTimesCircle;
+  faShareSquare = faShareSquare;
 
   id: number;
   newCompra : boolean = false;
@@ -34,6 +35,7 @@ export class CompraDetailsComponent implements OnInit {
   editingItem: OrdemCompra;
   descricaoMaterial : string;
   compra: Compra;
+  estadosCompra : string[] = ESTADOS_COMPRA;
   today : Date = new Date();
   materials : Material[];
   filteredMaterials: Observable<string[]>;
@@ -41,6 +43,7 @@ export class CompraDetailsComponent implements OnInit {
   editingMaterialControl = new FormControl('', [Validators.required]);
   emailControl = new FormControl('', [Validators.required, Validators.email]);
   materialInvalido : boolean = false;
+  IN_PROGRESS : boolean = false;
 
   constructor(private comprasService : ComprasService, 
     private materialService : MaterialService,
@@ -57,7 +60,8 @@ export class CompraDetailsComponent implements OnInit {
         const id = +id_s;
         this.getCompra(id);
       } else {
-        this.compra = new Compra(CompraDetailsComponent.NEW_COMPRA_ID, '', new Date(), '', '');
+        this.newCompra = true;
+        this.compra = new Compra(CompraDetailsComponent.NEW_COMPRA_ID, '', new Date(), '', '', 'PENDENTE');
       }
       
       
@@ -89,7 +93,7 @@ export class CompraDetailsComponent implements OnInit {
   }
 
   delete(i: number) {
-    this.compra.itens.splice(i, 1);
+    this.compra.ordemMaterial.splice(i, 1);
   }
 
   startUpdate(i: number) {
@@ -100,7 +104,7 @@ export class CompraDetailsComponent implements OnInit {
       );
     this.editingIndex = i;
     this.editing = true;
-    this.editingItem = OrdemCompra.clone(this.compra.itens[i]);
+    this.editingItem = OrdemCompra.clone(this.compra.ordemMaterial[i]);
     this.descricaoMaterial = this.editingItem.material.descricaoMaterial;
     console.log(this.editingItem);
   }
@@ -115,8 +119,7 @@ export class CompraDetailsComponent implements OnInit {
   update() {
     let found = this.findMaterialFromDescription();
     if (found) {
-      this.editingItem.updatePrice();
-      this.compra.itens[this.editingIndex] = this.editingItem;
+      this.compra.ordemMaterial[this.editingIndex] = this.editingItem;
       this.resetUpdate();
     } else {
       this.notifyMaterialIncorreto();
@@ -159,16 +162,15 @@ export class CompraDetailsComponent implements OnInit {
         startWith(''),
         map(value => this._filter(value))
       );
-    this.adding = true;
-    this.descricaoMaterial = '';
     this.editingItem = new OrdemCompra(1, undefined);
-  }
+    this.descricaoMaterial = '';
+    this.adding = true;
+  }  
 
   add() {
     let found = this.findMaterialFromDescription();
     if (found) {
-      this.editingItem.updatePrice();
-      this.compra.itens.push(this.editingItem);
+      this.compra.ordemMaterial.push(this.editingItem);
       this.resetAdd();
     } else {
       this.notifyMaterialIncorreto();
@@ -182,21 +184,59 @@ export class CompraDetailsComponent implements OnInit {
   }
 
   save(){
+    if (this.IN_PROGRESS) return;
+    this.IN_PROGRESS = true;
     console.log(this.compra);
     if (this.compra.id == CompraDetailsComponent.NEW_COMPRA_ID) {
       this.comprasService.save(this.compra).subscribe(
         result => {
+          this.IN_PROGRESS = false;
+          console.log(result);
           this.router.navigateByUrl('/compras');
         }
       )
     } else {
       this.comprasService.update(this.compra).subscribe(
         result => {
+          this.IN_PROGRESS = false;
           this.router.navigateByUrl('/compras');
         }
       );
     }
     
+  }
+
+  finalizar() {
+    if (this.IN_PROGRESS) return;
+    this.IN_PROGRESS = true;
+    this.compra.estadoCompra = "ENVIADO";
+    if (this.compra.id == CompraDetailsComponent.NEW_COMPRA_ID) {
+      this.comprasService.save(this.compra).subscribe(
+        result => {
+          this.IN_PROGRESS = false;
+          this.compra = result;
+          this.enviarEmail();
+          this.router.navigateByUrl('/compras');
+        }
+      );
+    } else {
+      this.comprasService.update(this.compra).subscribe(
+        result => {
+          this.IN_PROGRESS = false;
+          this.enviarEmail();
+          this.router.navigateByUrl('/compras');
+        }
+      );
+    }
+  }
+
+  enviarEmail() {
+    this.comprasService.sendEmail(this.compra).subscribe(
+      result => {
+        console.log(result);
+        this.router.navigateByUrl('/compras');
+      }
+    )
   }
 
 

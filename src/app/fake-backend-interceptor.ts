@@ -63,9 +63,19 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             returnValue = handleCrudRequest<Obra>(request, "/obra", "obra", TEST_OBRAS);
             if (returnValue != null) return returnValue;
             
+
+            
+            let regex = new RegExp('/compra/enviarEmailCompra/' + "\/[0-9]+");
+            if (request.url.match(regex)){
+                let urlParts = request.url.split('/');
+                let id = parseInt(urlParts[urlParts.length - 1]);
+                console.log('Send Email by id' + request.url);
+                return of(new HttpResponse({status: 200}));
+            }
             returnValue = handleCrudRequest<Compra>(request, "/compra", "compra", TEST_COMPRAS);
             if (returnValue != null) return returnValue;
             
+
             console.log("Not able to find endpoint");
             // pass through any requests not handled above
             return next.handle(request);

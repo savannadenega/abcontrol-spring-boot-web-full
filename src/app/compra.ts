@@ -2,60 +2,50 @@ import {Material, m3, m2} from './material';
 
 export class Compra {
     id: number;
-    nome: string;
+    nomeCompra: string;
     dataCompra: Date;
-    nomeFornecedor : string;
+    razaoSocialFornecedor : string;
     emailFornecedor: string;
-    itens : OrdemCompra[];
+    estadoCompra: string;
+    ordemMaterial : OrdemCompra[];
 
-    constructor(id : number, nome: string, dataCompra: Date, nomeFornecedor: string, emailFornecedor: string) { 
+    constructor(id : number, nomeCompra: string, dataCompra: Date, razaoSocialFornecedor: string, emailFornecedor: string, estadoCompra: string) { 
         this.id = id;
-        this.nome = nome;
+        this.nomeCompra = nomeCompra;
         this.dataCompra = dataCompra;
-        this.nomeFornecedor = nomeFornecedor;
+        this.razaoSocialFornecedor = razaoSocialFornecedor;
         this.emailFornecedor = emailFornecedor; 
-        this.itens = [];
+        this.estadoCompra = estadoCompra;
+        this.ordemMaterial = [];
     }  
      
-    getValorTotal() : number {
-        let total = 0;
-        for (let oc of this.itens) {
-            total += oc.preco;
-        }
-        return total;
-    }
 }
 
 export class OrdemCompra {
-    quantidade: number;
-    preco: number;
-    material: Material;
+    id: number;
+    quantidadeMaterial: number;
+    material? : Material;
+    idMaterial: number;
 
-    constructor(quantidade: number, material : Material) {
-        this.quantidade = quantidade;
+    constructor(quantidadeMaterial: number, material : Material) {
+        this.quantidadeMaterial = quantidadeMaterial;
         if (material) {
-            this.preco = material.valorUnidade * quantidade;
-            this.material = material;
-        } else {
-            this.preco = 0;
-            this.material = undefined;
-        }
+          this.idMaterial = material.id;
+          this.material = material;
+        } 
         
     }
 
-    updatePrice() : void {
-        this.preco = this.material.valorUnidade * this.quantidade;
-    }
-
     static clone(oc: OrdemCompra) : OrdemCompra {
-        return new OrdemCompra(oc.quantidade, oc.material);
+        return new OrdemCompra(oc.quantidadeMaterial, oc.material);
     }
 }
 
-let c1 = new Compra(101, 'Compra test', new Date('11/05/2018'), 'Teste', 'dummy@fornecedor.com.br');
-c1.itens.push(new OrdemCompra(2, m3));
-c1.itens.push(new OrdemCompra(4, m2));
+let c1 = new Compra(101, 'Compra test', new Date('11/05/2018'), 'Teste', 'dummy@fornecedor.com.br', "PENDENTE");
+c1.ordemMaterial.push(new OrdemCompra(2, m3));
+c1.ordemMaterial.push(new OrdemCompra(4, m2));
 
+export let ESTADOS_COMPRA = ["PENDENTE", "ENVIADO", "FINALIZADO"];
 
 export let TEST_COMPRAS : Compra[] = [
     c1
