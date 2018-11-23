@@ -1,0 +1,86 @@
+<div class="d-block">
+    <div style="width: 100%">
+      <div class="float-left">
+        <h3><span *ngIf="novoProjeto">Novo </span>Projeto <span *ngIf="projeto && !novoProjeto">{{projeto.id}}</span></h3>
+      </div>
+      <div class="float-right">
+        <button type="button" class="btn btn-default" (click)="back()"><fa-icon [icon]="faTimesCircle"></fa-icon></button>
+      </div>
+    </div>
+    <br><br><br>
+    <div>
+      <div *ngIf="projeto">            
+        <div>
+          <div class="row">
+            <mat-form-field class="col-6">
+              <input matInput placeholder="Nome" [(ngModel)]="projeto.nome">
+            </mat-form-field>
+            <mat-form-field class="col-3">
+              <mat-select [(value)]="projeto.tipoProjeto">
+                <mat-option> - </mat-option>
+                <mat-option *ngFor="let tipo of tiposProjeto" value="{{tipo}}">{{tipo}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field class="col-3">
+                <mat-select [(value)]="projeto.statusProjeto">
+                  <mat-option> - </mat-option>
+                  <mat-option *ngFor="let status of estadosProjeto" value="{{status}}">{{status}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+          </div>
+          <div class="row">
+            <mat-form-field class="col-4">
+             <input matInput [(ngModel)]="projeto.dataInicial" [matDatepicker]="dataInicialPicker" placeholder="Data Inicial">
+              <mat-datepicker-toggle matSuffix [for]="dataInicialPicker"></mat-datepicker-toggle>
+              <mat-datepicker #dataInicialPicker [startAt]="projeto.dataInicial"></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field class="col-4">
+              <input matInput [(ngModel)]="projeto.previsaoTermino" [matDatepicker]="previsaoTerminoPicker" placeholder="Previsão Término">
+              <mat-datepicker-toggle matSuffix [for]="previsaoTerminoPicker"></mat-datepicker-toggle>
+              <mat-datepicker #previsaoTerminoPicker [startAt]="projeto.previsaoTermino"></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+        <div>
+          <div>
+            <div class="row">
+              <h4>Obras</h4>
+              <table class="table">
+                <tbody>
+                    <tr *ngFor="let obra of projeto.obras; let i = index;">
+                      <td>{{obra.nome}}</td>
+                      <td><button type="button" class="btn btn-warning" (click)="remove(i)"><fa-icon [icon]="faTrash" [inverse]="true"></fa-icon></button></td>
+                    </tr>
+                    <tr>
+                      <td *ngIf="obras && obras.length > 0">  
+                        <mat-select class="col-4" [(value)]="novaObra" (selectionChange)="novaObraChanged($event)">
+                          <mat-option> - </mat-option>
+                          <mat-option *ngFor="let obra of obras" value="{{obra.id}}">{{obra.nome}}</mat-option>
+                        </mat-select>            
+                      </td>
+                      <td></td>
+                    </tr>
+                </tbody>
+              </table>
+            </div>
+<!--
+            <div class="row" *ngFor="let obra of projeto.obras; let i = index;">
+              <div class="col-4">{{obra.nome}}</div>
+              <div class="col-2"><button type="button" class="btn btn-warning" (click)="remove(i)"><fa-icon [icon]="faTrash" [inverse]="true"></fa-icon></button></div>
+            </div>
+            <div class="row" *ngIf="obras && obras.length > 0">  
+              <mat-select class="col-4" [(value)]="novaObra" (selectionChange)="novaObraChanged($event)">
+                <mat-option> - </mat-option>
+                <mat-option *ngFor="let obra of obras" value="{{obra.id}}">{{obra.nome}}</mat-option>
+              </mat-select>            
+            </div>
+-->
+          </div>
+      </div>
+      <div class="row">
+        <button type="button" class="btn btn-primary" (click)="save()"><fa-icon [icon]="faSave"></fa-icon> Salvar</button>
+      </div>
+      
+    </div>
+  
+  </div>

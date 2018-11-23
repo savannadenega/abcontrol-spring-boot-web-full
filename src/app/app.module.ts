@@ -21,6 +21,8 @@ import { FormasPagamentoComponent } from './formas-pagamento/formas-pagamento.co
 import { ObrasComponent } from './obras/obras.component';
 import { ComprasComponent } from './compras/compras.component';
 import { CompraDetailsComponent } from './compra-details/compra-details.component';
+import { ProjetosComponent } from './projetos/projetos.component';
+import { ProjetoDetailsComponent } from './projeto-details/projeto-details.component';
 
 registerLocaleData(localePTBR);
 
@@ -34,7 +36,9 @@ registerLocaleData(localePTBR);
     FormasPagamentoComponent,
     ObrasComponent,
     ComprasComponent,
-    CompraDetailsComponent
+    CompraDetailsComponent,
+    ProjetosComponent,
+    ProjetoDetailsComponent
   ],
   imports: [
     BrowserModule,

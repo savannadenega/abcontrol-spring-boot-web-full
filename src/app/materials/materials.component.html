@@ -58,6 +58,9 @@
             </tr>
            </tbody>
         </table>
+        <div *ngIf="(!materials || materials.length == 0) && !adding">
+            <p class="text-center">Ainda não existem materiais, tente adicionar um :)</p>
+        </div>
   </div>
 
 </div>

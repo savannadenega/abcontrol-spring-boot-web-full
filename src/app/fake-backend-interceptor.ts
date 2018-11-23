@@ -6,6 +6,7 @@ import { TEST_MATERIALS, Material } from './material';
 import { FormaPagamento, TEST_FORMAS_PG } from './forma-pagamento';
 import { Obra, TEST_OBRAS } from './obra';
 import { Compra, TEST_COMPRAS } from './compra';
+import { TEST_PROJETOS, Projeto } from './projeto';
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
@@ -53,7 +54,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             
             console.log("Trying to find fake backend endpoint for " + request.url);
             let returnValue : Observable<HttpEvent<any>>;
-            
+            /*
             returnValue = handleCrudRequest<Material>(request, "/material", "material", TEST_MATERIALS);
             if (returnValue != null) return returnValue;
             
@@ -62,9 +63,11 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             
             returnValue = handleCrudRequest<Obra>(request, "/obra", "obra", TEST_OBRAS);
             if (returnValue != null) return returnValue;
-            
+            */
+            returnValue = handleCrudRequest<Projeto>(request, "/projeto", "projeto", TEST_PROJETOS);
+            if (returnValue != null) return returnValue;
 
-            
+            /*
             let regex = new RegExp('/compra/enviarEmailCompra/' + "\/[0-9]+");
             if (request.url.match(regex)){
                 let urlParts = request.url.split('/');
@@ -74,7 +77,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             }
             returnValue = handleCrudRequest<Compra>(request, "/compra", "compra", TEST_COMPRAS);
             if (returnValue != null) return returnValue;
-            
+            */
 
             console.log("Not able to find endpoint");
             // pass through any requests not handled above
