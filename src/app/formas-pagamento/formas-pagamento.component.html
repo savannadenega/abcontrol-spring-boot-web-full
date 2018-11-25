@@ -53,6 +53,9 @@
             </tr>
            </tbody>
         </table>
+        <div *ngIf="(!formas || formas.length == 0) && !adding">
+            <p class="text-center">Ainda não existem formas de pagamento, tente adicionar uma :)</p>
+        </div>
   </div>
 
 </div>

@@ -14,7 +14,8 @@ import { error } from 'protractor';
 export class ObrasService {
 
   base_url = HOST + '/obra';
-  constructor(private http: HttpClient, private messageService: MessageService) { }
+  constructor(private http: HttpClient, private messageService: MessageService) {
+   }
 
   getObras(itemsPerPage: number, page: number) : Observable<Obra[]> {
 
@@ -40,7 +41,7 @@ export class ObrasService {
   update(obra : Obra) {
     return this.http.put<any>(this.base_url, obra)
       .pipe(
-        tap(categories => {
+        tap(obra => {
           this.messageService.add("Successo!", `Atualizou obra ${obra.id}`);
         }, err => {
           if (err.error instanceof Error) {
@@ -57,7 +58,7 @@ export class ObrasService {
   save(obra : Obra) {
     return this.http.post<Obra>(this.base_url, obra)
       .pipe(
-        tap(forma_pg => {
+        tap(obra => {
           this.messageService.add("Successo!", `Criou obra ${obra.id}`);
         }, err => {
           if (err.error instanceof Error) {
@@ -72,10 +73,10 @@ export class ObrasService {
   }
 
   delete(obra : Obra) {
-    let params = new HttpParams()
-                  .set("id", obra.id.toString());
+   // let params = new HttpParams()
+   //               .set("id", obra.id.toString());
 
-    return this.http.delete<any>(this.base_url, {params : params})
+    return this.http.delete<any>(this.base_url + `/${obra.id}`)
       .pipe(
         tap( status => {
           this.messageService.add("Successo!", `Deletou obra ${obra.id}`);

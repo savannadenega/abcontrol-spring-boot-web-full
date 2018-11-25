@@ -101,6 +101,9 @@
             </tr>
            </tbody>
         </table>
+        <div *ngIf="(!obras || obras.length == 0) && !adding">
+            <p class="text-center">Ainda não existem obras, tente adicionar uma :)</p>
+        </div>
   </div>
 
 </div>

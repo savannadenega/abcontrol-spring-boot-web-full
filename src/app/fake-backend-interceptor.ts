@@ -63,10 +63,11 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             
             returnValue = handleCrudRequest<Obra>(request, "/obra", "obra", TEST_OBRAS);
             if (returnValue != null) return returnValue;
-            */
+           
+
             returnValue = handleCrudRequest<Projeto>(request, "/projeto", "projeto", TEST_PROJETOS);
             if (returnValue != null) return returnValue;
-
+            */
             /*
             let regex = new RegExp('/compra/enviarEmailCompra/' + "\/[0-9]+");
             if (request.url.match(regex)){

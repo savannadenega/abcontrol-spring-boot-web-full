@@ -3,15 +3,15 @@ import { Obra, TEST_OBRAS } from "./obra";
 export class Projeto {
 
     id?: number;
-    nome: string;
+    nomeProjeto: string;
     tipoProjeto: string;
     statusProjeto: string;
     dataInicial: Date;
     previsaoTermino: Date;
     obras: Obra[];
 
-    constructor(nome: string, tipoProjeto: string, statusProjeto: string, dataInicial: Date, previsaoTermino: Date, id?: number) {
-        this.nome = nome;
+    constructor(nomeProjeto: string, tipoProjeto: string, statusProjeto: string, dataInicial: Date, previsaoTermino: Date, id?: number) {
+        this.nomeProjeto = nomeProjeto;
         this.tipoProjeto = tipoProjeto;
         this.statusProjeto = statusProjeto;
         this.dataInicial = dataInicial;

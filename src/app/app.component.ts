@@ -15,5 +15,6 @@ export class AppComponent {
   }
 }
 
-export const HOST = 'http://localhost:8080';
+export const HOST = 'https://abcontrol-spring-boot-microser.herokuapp.com/';
+//export const HOST = 'http://localhost:8080';
 //export const HOST = '';

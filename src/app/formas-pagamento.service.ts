@@ -14,7 +14,7 @@ import { error } from 'protractor';
 })
 export class FormasPagamentoService {
 
-  base_url = HOST + '/formapagamento';
+  base_url = HOST + '/formaPagamento';
   constructor(private http: HttpClient, private messageService: MessageService) { }
 
   getFormasPagamento(itemsPerPage: number, page: number) : Observable<FormaPagamento[]> {
@@ -76,10 +76,10 @@ export class FormasPagamentoService {
   }
 
   deleteFormaPagamento(forma_pg : FormaPagamento) {
-    let params = new HttpParams()
-                  .set("id", forma_pg.id.toString());
+    //let params = new HttpParams()
+    //              .set("id", forma_pg.id.toString());
 
-    return this.http.delete<any>(this.base_url, {params : params})
+    return this.http.delete<any>(this.base_url + `/${forma_pg.id}`)
       .pipe(
         tap( status => {
           this.messageService.add("Successo!", `Deletou forma de pagamento ${forma_pg.id}`);

@@ -23,7 +23,7 @@
             <ng-container *ngFor="let projeto of projetos; let i = index;" [attr.data-index]="i">
               <tr>
                   <th scope="row">{{projeto.id}}</th>
-                  <td><a routerLink="/projetos/{{projeto.id}}">{{projeto.nome}}</a></td>
+                  <td><a routerLink="/projetos/{{projeto.id}}">{{projeto.nomeProjeto}}</a></td>
                   <td>{{projeto.tipoProjeto}}</td>
                   <td>{{projeto.statusProjeto}}</td>
                   <td>{{projeto.dataInicial | date : "dd MMM, yyyy"}}</td>
@@ -32,6 +32,9 @@
             </ng-container>
            </tbody>
         </table>
+        <div *ngIf="(!projetos || projetos.length == 0) && !adding">
+          <p class="text-center">Ainda não existem projetos, tente adicionar um :)</p>
+        </div>
   </div>
 
 </div>

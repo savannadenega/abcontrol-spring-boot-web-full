@@ -33,6 +33,9 @@
             </ng-container>
            </tbody>
         </table>
+        <div *ngIf="(!compras || compras.length == 0) && !adding">
+            <p class="text-center">Ainda não existem compras, tente adicionar uma :)</p>
+        </div>
   </div>
 
 </div>

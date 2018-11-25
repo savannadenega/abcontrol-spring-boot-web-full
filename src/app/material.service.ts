@@ -79,10 +79,10 @@ export class MaterialService {
   }
 
   deleteMaterial(material : Material) {
-    let params = new HttpParams()
-                  .set("id", material.id.toString());
+    //let params = new HttpParams()
+    //              .set("id", material.id.toString());
 
-    return this.http.delete<any>(this.base_url, {params : params})
+    return this.http.delete<any>(this.base_url + `/${material.id}`)
       .pipe(
         tap( status => {
           this.messageService.add("Success!", "Deleted Material " + material.id);
